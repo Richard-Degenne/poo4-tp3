@@ -6,11 +6,18 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -37,25 +44,41 @@ public class Service implements Serializable {
     @Column(nullable=false,
             length=50)
     private String localization;
+    
+    @OneToMany(mappedBy="service",
+            cascade=CascadeType.PERSIST)
+    private Collection<Doctor> doctors;
 
+    @ManyToOne
+    private Doctor manager;
     
     /*
     Constructors
     */
 
     public Service() {
+        doctors = new HashSet<>();
     }
 
     public Service(String name, String localization) {
+        this();
         this.name = name.toUpperCase();
         this.localization = localization.toUpperCase();
     }
     
     
-    
     /*
     Methods
     */
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public String getName() {
         return name;
     }
@@ -71,19 +94,36 @@ public class Service implements Serializable {
     public void setLocalization(String localization) {
         this.localization = localization.toUpperCase();
     }
-
-    public Long getId() {
-        return id;
+    
+    public boolean addDoctor(Doctor d) {
+        Service s_old = d.getService();
+        
+        if(doctors.add(d)) {
+            if(s_old != null)
+                s_old.doctors.remove(d);
+            d.setService(this);
+            return true;
+        }
+        return false;
+    }
+    
+    public Collection<Doctor> getDoctors() {
+        return new HashSet<>(doctors);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Doctor getManager() {
+        return manager;
     }
 
+    public void setManager(Doctor manager) {
+        this.manager = manager;
+    }
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (name != null ? name.hashCode() : 0);
         return hash;
     }
 
@@ -102,10 +142,16 @@ public class Service implements Serializable {
 
     @Override
     public String toString() {
-        return "Service\n" + 
+        String result = "Service\n" + 
                 "  id= " + id + "\n" +
                 "  name= " + name +"\n" +
-                "  localization= " + localization +"\n";
+                "  localization= " + localization +"\n" +
+                "  doctors= ";
+        
+        for(Doctor d : doctors) {
+            result += d.getFirstName() + " " + d.getLastName() + ", ";
+        }
+        return result;
     }
     
 }
