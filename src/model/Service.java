@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,10 +19,58 @@ import javax.persistence.Id;
 @Entity
 public class Service implements Serializable {
 
+    /*
+    Attributes
+    */
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="SERVNO")
     private Long id;
+    
+    @Column(unique=true,
+            nullable=false,
+            length=50)
+    private String name;
+    
+    @Column(nullable=false,
+            length=50)
+    private String localization;
+
+    
+    /*
+    Constructors
+    */
+
+    public Service() {
+    }
+
+    public Service(String name, String localization) {
+        this.name = name.toUpperCase();
+        this.localization = localization.toUpperCase();
+    }
+    
+    
+    
+    /*
+    Methods
+    */
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name.toUpperCase();
+    }
+
+    public String getLocalization() {
+        return localization;
+    }
+
+    public void setLocalization(String localization) {
+        this.localization = localization.toUpperCase();
+    }
 
     public Long getId() {
         return id;
@@ -45,7 +94,7 @@ public class Service implements Serializable {
             return false;
         }
         Service other = (Service) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.name == null && other.name != null) || (this.name != null && !this.name.equals(other.name))) {
             return false;
         }
         return true;
@@ -53,7 +102,10 @@ public class Service implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Service[ id=" + id + " ]";
+        return "Service\n" + 
+                "  id= " + id + "\n" +
+                "  name= " + name +"\n" +
+                "  localization= " + localization +"\n";
     }
     
 }

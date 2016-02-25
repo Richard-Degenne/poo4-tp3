@@ -5,6 +5,8 @@
  */
 package client;
 
+import model.Service;
+
 /**
  *
  * @author richou
@@ -15,7 +17,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Service s = new Service("Urgences", "Bâtiment A");
+        System.out.println(s);
     }
     
 }
