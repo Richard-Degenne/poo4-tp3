@@ -53,6 +53,11 @@ public class Doctor implements Serializable {
     @OneToMany(mappedBy="manager")
     private Collection<Service> managedServices;
     
+    @ManyToOne
+    private Doctor manager;
+    
+    @OneToMany(mappedBy="manager")
+    private Collection<Doctor> subordinates;
     
     /*
     Constructors
@@ -60,6 +65,7 @@ public class Doctor implements Serializable {
 
     public Doctor() {
         managedServices = new HashSet<>();
+        subordinates = new HashSet<>();
     }
 
     public Doctor(String firstName, String lastName, double wage) {
@@ -130,6 +136,24 @@ public class Doctor implements Serializable {
     public Collection<Service> getManagedServices() {
         return new HashSet<>(managedServices);
     }
+    
+    public Doctor getManager() {
+        return manager;
+    }
+    
+    public boolean setManager(Doctor doctor) {
+        if(doctor == this)
+            return false;
+        if(doctor == manager)
+            return true;
+        
+        if(manager != null) {
+            manager.subordinates.remove(this);
+        }
+        doctor.subordinates.add(this);
+        manager = doctor;
+        return true;
+    }
 
     
     @Override
@@ -159,12 +183,19 @@ public class Doctor implements Serializable {
     public String toString() {
         String result = "Doctor\n" + 
                 "  id= " + id + "\n" +
-                "  name= " + firstName+" "+lastName +"\n" +
+                "  name= " + firstName+" "+lastName +"\n" + 
+                "  manager= " + ((manager == null) ? "-" : (manager.firstName + " " + manager.lastName)) + "\n" +
                 "  wage= " + wage +"\n" +
-                "  manager of= ";
+                "  managed services= ";
         
         for(Service s : managedServices) {
             result += s.getName()+", ";
+        }
+        result += "\n";
+        
+        result += "  subordinates= ";
+        for(Doctor d : subordinates) {
+            result += d.firstName + " " + d.lastName + ", ";
         }
         return result;
     }

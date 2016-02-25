@@ -55,12 +55,20 @@ public class Test3 {
             med5.addManagedService(serv1);
             med5.addManagedService(serv3);
             
+            med1.setManager(med2);
+            med3.setManager(med2);
+            med5.setManager(med6);
+            
             System.out.println(med1);
+            System.out.println(med2);
+            System.out.println(med3);
             System.out.println(med4);
             System.out.println(med5);
+            System.out.println(med6);
             System.out.println(serv1);
             System.out.println(serv2);
             System.out.println(serv3);
+            
             
             em.persist(serv1);
             em.persist(serv2);
@@ -71,6 +79,7 @@ public class Test3 {
         }
         catch(Exception e) {
             log.log(Level.SEVERE, e.getMessage());
+            e.printStackTrace();
             log.log(Level.SEVERE, "Transaction aborted.");
             et.rollback();
         }
