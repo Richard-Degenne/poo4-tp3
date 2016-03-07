@@ -11,7 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import model.Address;
 import model.Doctor;
+import model.Patient;
 import model.Service;
 
 /**
@@ -45,6 +47,11 @@ public class Test3 {
             Doctor med4 = new Doctor("Hitmieu", "Helmer", 1873.30);
             Doctor med5 = new Doctor("Cambronne", "Maude", 3765.20);
             Doctor med6 = new Doctor("Haybon", "Sylvain", 2980.00);
+            Patient p1 = new Patient("Proviste", "Alain", new Address(42, "rue du olala", "62300", "Lens"));
+            Patient p2 = new Patient("Trauile", "Phil", new Address(55, "rue de la perche", "62300", "Lens"));
+            Patient p3 = new Patient("Ancieux", "Cecile");
+            Patient p4 = new Patient("Conda", "Anna");
+            
             serv1.addDoctor(med1);
             serv1.addDoctor(med2);
             serv1.addDoctor(med3);
@@ -68,11 +75,19 @@ public class Test3 {
             System.out.println(serv1);
             System.out.println(serv2);
             System.out.println(serv3);
+            System.out.println(p1);
+            System.out.println(p2);
+            System.out.println(p3);
+            System.out.println(p4);
             
             
             em.persist(serv1);
             em.persist(serv2);
             em.persist(serv3);
+            em.persist(p1);
+            em.persist(p2);
+            em.persist(p3);
+            em.persist(p4);
             
             et.commit();
             log.log(Level.INFO, "Transaction committed.");
